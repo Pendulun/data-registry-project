@@ -1,13 +1,15 @@
-import datetime
 import dotenv
 from fastapi import FastAPI, Form, UploadFile
 from pydantic import BaseModel
 from typing import Annotated
-import src.db.conn as conn
+
+from src.app.adapters.inward import dataset_api
 
 dotenv.load_dotenv()
 
 app = FastAPI()
+
+app.include_router(dataset_api.router)
 
 datasets = dict()
 
@@ -26,18 +28,6 @@ class FileUpload(BaseModel):
     dataset: Dataset
     version: Version
     file: UploadFile
-
-
-@app.post("/create/")
-def create_dataset(dataset: Dataset):
-    conn.add_dataset(dataset.name, dataset.description)
-    return {"status": "200"}
-
-
-@app.get("/list")
-def list_datasets():
-    datasets = conn.get_databases()
-    return {"datasets": datasets}
 
 
 @app.post("/add_version/")
