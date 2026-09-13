@@ -1,16 +1,10 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
 
 from src.app.adapters.out import connection, DatasetRepoImp
+from src.app.adapters.inward.schemas.dataset import CreateDatasetRequest
 from src.app.use_cases.dataset.create_dataset import CreateDataset
 from src.app.use_cases.dataset.list_dataset import ListDatasets
 from src.app.config import settings
-
-
-class CreateDatasetRequest(BaseModel):
-    name: str
-    description: str
-
 
 router = APIRouter()
 

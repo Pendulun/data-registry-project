@@ -3,13 +3,15 @@ from fastapi import FastAPI, Form, UploadFile
 from pydantic import BaseModel
 from typing import Annotated
 
-from src.app.adapters.inward import dataset_api
+from src.app.adapters.inward.api import dataset_api
+from src.app.adapters.inward.api import version_api
 
 dotenv.load_dotenv()
 
 app = FastAPI()
 
 app.include_router(dataset_api.router)
+app.include_router(version_api.router)
 
 datasets = dict()
 
@@ -28,23 +30,6 @@ class FileUpload(BaseModel):
     dataset: Dataset
     version: Version
     file: UploadFile
-
-
-@app.post("/add_version/")
-def add_version(version: Version, dataset: Dataset):
-    print(version)
-    dataset_name = dataset.dataset
-    if dataset_name not in datasets:
-        return {'status': '500', 'error': 'dataset inexistente!'}
-
-    dataset_versions = datasets[dataset_name]
-
-    if version.id in dataset_versions:
-        return {'status': '500', 'error': 'versão já existente!'}
-
-    dataset_versions[version.id] = version.owner
-
-    return {"status": "200"}
 
 
 @app.post("/uploadfile/")
