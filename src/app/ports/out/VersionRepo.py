@@ -11,9 +11,15 @@ class VersionRepo(ABC):
         pass
 
     @abstractmethod
-    def get_version_for_dataset(
-        self,
-        version_number: int,
-        dataset_id: int,
-    ) -> Version | None:
+    def get_version(self, version_id: int) -> Version | None:
+        pass
+
+    @abstractmethod
+    def get_version_for_dataset(self, version_number: int,
+                                dataset_id: int) -> Version | None:
+        pass
+
+    @abstractmethod
+    def get_version_for_dataset_by_id(self, version_id: int,
+                                      dataset_id: int) -> Version | None:
         pass
