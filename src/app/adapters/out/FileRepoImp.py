@@ -1,3 +1,5 @@
+import uuid
+
 from src.app.adapters.out.connection import Database
 from src.app.domain.entities.file import File
 from src.app.ports.out.FileRepo import FileRepo
@@ -29,6 +31,13 @@ class FileRepoImp(FileRepo):
                     """
         params = (file_path, )
         return self._query_one_row(query_str=query_str, params=params)
+
+    def get_file_by_id(self, id: uuid.UUID) -> File | None:
+        query_str = f"""
+        SELECT * from file
+        WHERE id = {id}
+        """
+        return self._query_one_row(query_str=query_str)
 
     def _query_one_row(self, query_str: str, params: tuple = None) -> File:
         with self.conn.get_cursor() as cur:
