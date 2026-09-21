@@ -27,9 +27,10 @@ run-db:
 run-app:
 	docker build -f Dockerfile -t data-registry-app .
 	docker run -d \
-	-p 8000:8000 \
-	--network data-registry-network \
-	data-registry-app
+		-p 8000:8000 \
+		--network data-registry-network \
+		--env-file .env \
+		data-registry-app
 
 # Versão de desenvolvimento. Usa bind-mount para que alterações
 # no host reflitam no container facilitando o desenvolvimento
@@ -40,5 +41,6 @@ run-app-dev:
 		-p 8000:8000 \
 		--network data-registry-network \
 		-v .:/app \
+		--env-file .env \
 		data-registry-app \
-		uv run fastapi dev main.py --host 0.0.0.0 --port 8000
+		python -m fastapi dev main.py --host 0.0.0.0 --port 8000
