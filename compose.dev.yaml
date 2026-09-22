@@ -1,0 +1,12 @@
+services:
+  app:
+    volumes:
+      - .:/app
+      - data-registry-app-venv:/app/.venv
+    command: >
+      /app/.venv/bin/fastapi dev main.py
+      --host 0.0.0.0
+      --port 8000
+
+volumes:
+  data-registry-app-venv:

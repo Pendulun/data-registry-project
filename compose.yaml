@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env
+    depends_on:
+      data-registry-db:
+        condition: service_healthy
+    networks:
+      - data-registry-network
+
+  data-registry-db:
+    image: postgres:18
+    env_file:
+      - ./.env
+    volumes:
+      - ./database/db_schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - data-registry-db-data:/var/lib/postgresql
+    networks:
+      - data-registry-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  data-registry-network:
+
+volumes:
+  data-registry-db-data:
