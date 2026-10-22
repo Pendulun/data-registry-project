@@ -23,7 +23,7 @@ def add_version(version: CreateVersionForDataset):
 async def upload_file_to_dataset_version(
     file: UploadFile,
     file_path: Annotated[str, Form()],
-    version_id: Annotated[str, Form()],
+    version_id: Annotated[int, Form()],
 ):
 
     version_repo = VersionRepoImp.VersionRepoImp(conn=connection.Database(

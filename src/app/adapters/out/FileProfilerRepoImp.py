@@ -11,8 +11,11 @@ class FileProfilerRepoImp(FileProfilerRepo):
     def create_file_profile(self, file_profile: FileProfile):
         with self.conn.get_cursor() as cur:
             # O id será criado automaticamente no banco
-            cur.execute(f"""
+            cur.execute(
+                """
                 INSERT INTO file_profile (file_id, n_columns, n_rows)
-                VALUES ({file_profile.file_id}, {file_profile.n_columns}, {file_profile.n_rows})
-                """)
+                VALUES (%s, %s, %s)
+                """,
+                (file_profile.file_id, file_profile.n_columns,
+                 file_profile.n_rows))
             self.conn.commit()

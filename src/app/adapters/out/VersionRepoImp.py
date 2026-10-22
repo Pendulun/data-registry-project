@@ -20,34 +20,38 @@ class VersionRepoImp(VersionRepo):
 
     def get_version(self, version_id: int) -> Version | None:
 
-        query_str = f"""
-                    SELECT * from version 
-                    WHERE id = {version_id}
+        query_str = """
+                    SELECT * FROM version
+                    WHERE id = %s
                     """
-        return self._query_one_row(query_str=query_str)
+        params = (version_id, )
+        return self._query_one_row(query_str=query_str, params=params)
 
     def get_version_for_dataset(
         self,
         version_number: int,
         dataset_id: int,
     ) -> Version | None:
-        query_str = f"""
+        query_str = """
                     SELECT * FROM version
-                    WHERE dataset_id = {dataset_id} AND version_number = {version_number}
+                    WHERE dataset_id = %s AND version_number = %s
                     LIMIT 1
                     """
-        return self._query_one_row(query_str=query_str)
+        params = (dataset_id, version_number)
+        return self._query_one_row(query_str=query_str, params=params)
 
     def get_version_for_dataset_by_id(self, version_id: int,
                                       dataset_id: int) -> Version | None:
-        query_str = f"""
+        query_str = """
                     SELECT * FROM version
-                    WHERE dataset_id = {dataset_id} AND id = {version_id}
+                    WHERE dataset_id = %s AND id = %s
                     LIMIT 1
                     """
-        return self._query_one_row(query_str=query_str)
+        params = (dataset_id, version_id)
+        return self._query_one_row(query_str=query_str, params=params)
 
-    def _query_one_row(self, query_str: str, params: tuple = None) -> Version:
+    def _query_one_row(self, query_str: str,
+                       params: tuple | None = None) -> Version | None:
         with self.conn.get_cursor() as cur:
 
             # Execute a command: this creates a new table
