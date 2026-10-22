@@ -2,6 +2,10 @@
 run-local:
 	uv run fastapi dev
 
+# Roda os testes unitários (não precisam de banco)
+test:
+	uv run python -m unittest discover -s tests -t . -v
+
 # Versões usando o Dockerfile e chamada manual ao Docker
 
 # Cria a rede interna que vai ser usada pelos dois conteineres
